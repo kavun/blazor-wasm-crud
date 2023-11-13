@@ -1,0 +1,84 @@
+@page "/"
+@using PeopleBlazorWasm.Shared
+@using PeopleBlazorWasm.Shared.People;
+@inject HttpClient Http
+@inject IClientClock Clock
+<PageTitle>People</PageTitle>
+
+<h1>People</h1>
+
+@if (people == null)
+{
+    <p><em>Loading people...</em></p>
+}
+else if (people.Length == 0)
+{
+    <div class="alert alert-info" role="alert">No people yet.</div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Birthday</th>
+                <th>Phone</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in people)
+            {
+                <tr>
+                    <td><a disabled=@loading href="/edit/@person.Id">@person.Name</a></td>
+                    <td>@person.Address.Street, @person.Address.City, @person.Address.State @person.Address.Zip</td>
+                    <td>@person.Birth.ToShortDateString() (@Math.Floor(Clock.UtcNow.Subtract(@person.Birth).Days / 365m) years old)</td>
+                    <td>@person.Phone</td>
+                    <td>
+                        <a disabled=@loading href="/edit/@person.Id" class="btn btn-sm btn-primary">Edit</a>
+                        <button disabled=@loading type="button" class="btn btn-sm btn-danger" @onclick=@(e => DeletePerson(person.Id))>Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private PersonResponse[]? people;
+    bool loading = false;
+    List<string> errors = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPeople();
+    }
+
+    async Task GetPeople()
+    {
+        people = await Http.GetFromJsonAsync<PersonResponse[]>("api/people");
+    }
+
+    async Task DeletePerson(Guid id)
+    {
+        if (people is null || people.Length < 1)
+        {
+            return;
+        }
+
+        loading = true;
+        try
+        {
+            errors.Clear();
+            var response = await Http.DeleteAsync($"/api/people/{id}");
+            response.EnsureSuccessStatusCode();
+
+            people = people.Where(p => p.Id != id).ToArray();
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}

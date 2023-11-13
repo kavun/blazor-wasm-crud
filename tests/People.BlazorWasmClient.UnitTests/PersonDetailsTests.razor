@@ -1,0 +1,17 @@
+@using People.BlazorWasmClient.Components
+@inherits TestContext
+@code
+{
+    [Fact]
+    public void PersonDetailsRenders()
+    {
+        // Arrange
+        var person = new People.Shared.People.PersonAddEditRequest();
+
+        // Act
+        var cut = Render(@<PersonDetails Disabled=false Person=person />);
+
+        // Assert
+        Assert.NotNull(cut.Find("#person-name"));
+    }
+}

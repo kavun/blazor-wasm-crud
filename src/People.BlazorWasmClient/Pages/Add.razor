@@ -1,0 +1,59 @@
+@page "/add"
+
+@using People.Shared.People;
+@using PeopleBlazorWasm.Shared.People;
+
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<PageTitle>Add Person</PageTitle>
+
+<h1>Add Person</h1>
+
+<People.BlazorWasmClient.Components.Errors ErrorList=@errors />
+<form @onsubmit="AddPerson">
+    <People.BlazorWasmClient.Components.PersonDetails Person=@person Disabled=@loading />
+    <div class="mt-3 space-between">
+        <div>
+            <button class="btn btn-primary" type="submit" disabled=@loading>Add</button>
+        </div>
+        <div>
+            <a class="btn" href="/" disabled=@loading>Cancel</a>
+        </div>
+    </div>
+</form>
+
+@code {
+    PersonAddEditRequest person = new();
+    List<string> errors = new();
+    bool loading = false;
+
+    private async Task AddPerson()
+    {
+        loading = true;
+        try
+        {
+            errors.Clear();
+            var response = await Http.PostAsJsonAsync<PersonAddEditRequest>("/api/people", person);
+            var content = await response.Content.ReadFromJsonAsync<PersonAddEditResponse>();
+            if (content == null)
+            {
+                errors.Add("An error occurred.");
+                return;
+            }
+
+            if (content.Error)
+            {
+                errors.AddRange(content.Errors.Errors.Select(e => e.Message));
+                return;
+            }
+
+            response.EnsureSuccessStatusCode();
+        }
+        finally
+        {
+            loading = false;
+        }
+        Navigation.NavigateTo("/");
+    }
+}

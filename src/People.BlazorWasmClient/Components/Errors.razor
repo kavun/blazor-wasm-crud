@@ -1,0 +1,15 @@
+@if (ErrorList.Count > 0)
+{
+    <div class="alert alert-danger" role="alert">
+        <div><strong>Error</strong></div>
+        @foreach (var error in ErrorList)
+        {
+            <div>@error</div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public List<string> ErrorList { get; set; } = new();
+}

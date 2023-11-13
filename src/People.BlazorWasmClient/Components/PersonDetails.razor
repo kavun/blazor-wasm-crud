@@ -1,0 +1,54 @@
+@using People.Shared.People;
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <label class="form-label" for="person-name">
+            Name
+        </label>
+        <input class="form-control" type="text" id="person-name" @bind="Person.Name" disabled=@Disabled required />
+    </div>
+    <div class="col-md-4 mb-3">
+        <label class="form-label" for="person-phone">
+            Phone
+        </label>
+        <input class="form-control" type="tel" id="person-phone" @bind="Person.Phone" disabled=@Disabled required />
+    </div>
+    <div class="col-md-4 mb-3">
+        <label class="form-label" for="person-birth">
+            Birth
+        </label>
+        <input class="form-control" type="date" id="person-birth" @bind="Person.Birth" disabled=@Disabled required />
+    </div>
+    <div class="col-md-3 mb-3">
+        <label class="form-label" for="person-street">
+            Street
+        </label>
+        <input class="form-control" type="text" id="person-street" @bind="Person.Street" disabled=@Disabled required />
+    </div>
+    <div class="col-md-3 mb-3">
+        <label class="form-label" for="person-city">
+            City
+        </label>
+        <input class="form-control" type="text" id="person-city" @bind="Person.City" disabled=@Disabled required />
+    </div>
+    <div class="col-md-3 mb-3">
+        <label class="form-label" for="person-state">
+            State
+        </label>
+        <input class="form-control" type="text" id="person-state" @bind="Person.State" disabled=@Disabled required />
+    </div>
+    <div class="col-md-3 mb-3">
+        <label class="form-label" for="person-zip">
+            Zip
+        </label>
+        <input class="form-control" type="text" id="person-zip" @bind="Person.Zip" disabled=@Disabled required />
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public required PersonAddEditRequest Person { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+}
