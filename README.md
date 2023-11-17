@@ -16,10 +16,18 @@ This is a sample Blazor application that allows CRUD of People. This showcases t
 
 ## Develop
 
+### Prerequisites
+- Install dotnet 7 SDK: https://dotnet.microsoft.com/en-us/download/dotnet/7.0
+- Install `dotnet ef` (>= v7.0.13)
+```powershell
+dotnet tool install --global dotnet-ef --version 7.0.13
+```
+
 ### Run
 
 Create and migrate the SQLite database, and start the server.
-```
+
+```powershell
 .\local.ps1 run
 ```
 If this is the first time running the application, this will create `.\src\People.BlazorWasmServer\people.db`.
@@ -32,17 +40,19 @@ View the running application at https://localhost:7102
 
 Run the tests
 
-```
+```powershell
 .\local.ps1 test
 ```
 
 ### Migrate database
-```
+
+```powershell
 .\local.ps1 migrate
 ```
 ### Add new migrations
 If you make changes to the database models, you'll need to create a new migration. This will create a new migration file in `.\src\People.Infrastructure\Migrations`.
-```
+
+```powershell
 .\local.ps1 migration MyNewMigration
 ```
 
@@ -67,7 +77,8 @@ This works, but comes with the [warning](https://learn.microsoft.com/en-us/aspne
 #### Error Handling
 
 I kept the global error handling UI, but would want to improve this experience. This is especially noticeable when we check API response status codes with
-```
+
+```csharp
 response.EnsureSuccessStatusCode();
 ```
 ... but don't have a way currently to display a useful message to the user without introducing a `try/catch` block.
@@ -79,6 +90,7 @@ The main thing to note here is that the controller is doing 2 things:
 - map response from service to an appropriate HTTP status code
 
 The basic pattern is:
+
 ```csharp
 [HttpPost]
 public IResult HandleSomePost([FromBody] SomeRequest request)

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using People.Infrastructure;
 using People.Shared.People;
-using PeopleBlazorWasm.Shared.People;
 using System.Data.Common;
 using Xunit.Abstractions;
 

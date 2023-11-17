@@ -1,8 +1,11 @@
 @page "/"
-@using PeopleBlazorWasm.Shared
-@using PeopleBlazorWasm.Shared.People;
-@inject HttpClient Http
+
+@using People.BlazorWasmClient.Services;
+@using People.Shared.People;
+
 @inject IClientClock Clock
+@inject PeopleApiClient PeopleApiClient
+
 <PageTitle>People</PageTitle>
 
 <h1>People</h1>
@@ -31,13 +34,13 @@ else
             @foreach (var person in people)
             {
                 <tr>
-                    <td><a disabled=@loading href="/edit/@person.Id">@person.Name</a></td>
+                    <td><a disabled=@resource.Loading href="/edit/@person.Id">@person.Name</a></td>
                     <td>@person.Address.Street, @person.Address.City, @person.Address.State @person.Address.Zip</td>
-                    <td>@person.Birth.ToShortDateString() (@Math.Floor(Clock.UtcNow.Subtract(@person.Birth).Days / 365m) years old)</td>
+                    <td><Birthday BirthDateTime="@person.Birth" /></td>
                     <td>@person.Phone</td>
                     <td>
-                        <a disabled=@loading href="/edit/@person.Id" class="btn btn-sm btn-primary">Edit</a>
-                        <button disabled=@loading type="button" class="btn btn-sm btn-danger" @onclick=@(e => DeletePerson(person.Id))>Delete</button>
+                        <a disabled=@resource.Loading href="/edit/@person.Id" class="btn btn-sm btn-primary">Edit</a>
+                        <button disabled=@resource.Loading type="button" class="btn btn-sm btn-danger" @onclick=@(e => DeletePerson(person.Id))>Delete</button>
                     </td>
                 </tr>
             }
@@ -47,8 +50,7 @@ else
 
 @code {
     private PersonResponse[]? people;
-    bool loading = false;
-    List<string> errors = new();
+    LoadableResource resource = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,28 +59,30 @@ else
 
     async Task GetPeople()
     {
-        people = await Http.GetFromJsonAsync<PersonResponse[]>("api/people");
+        await resource.TryInvoke(async () =>
+        {
+            var response = await PeopleApiClient.GetPeople();
+
+            response.HttpResponseMessage.EnsureSuccessStatusCode();
+
+            people = response.Content;
+        });
     }
 
     async Task DeletePerson(Guid id)
     {
-        if (people is null || people.Length < 1)
+        await resource.TryInvoke(async () =>
         {
-            return;
-        }
+            if (people is null || people.Length < 1)
+            {
+                return;
+            }
 
-        loading = true;
-        try
-        {
-            errors.Clear();
-            var response = await Http.DeleteAsync($"/api/people/{id}");
+            var response = await PeopleApiClient.DeletePerson(id);
+
             response.EnsureSuccessStatusCode();
 
             people = people.Where(p => p.Id != id).ToArray();
-        }
-        finally
-        {
-            loading = false;
-        }
+        });
     }
 }

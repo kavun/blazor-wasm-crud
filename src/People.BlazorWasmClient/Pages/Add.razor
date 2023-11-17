@@ -1,59 +1,52 @@
 @page "/add"
 
 @using People.Shared.People;
-@using PeopleBlazorWasm.Shared.People;
+@using People.BlazorWasmClient.Services;
 
-@inject HttpClient Http
 @inject NavigationManager Navigation
+@inject PeopleApiClient PeopleApiClient
 
 <PageTitle>Add Person</PageTitle>
 
 <h1>Add Person</h1>
 
-<People.BlazorWasmClient.Components.Errors ErrorList=@errors />
+<Errors ErrorList=@resource.Errors />
 <form @onsubmit="AddPerson">
-    <People.BlazorWasmClient.Components.PersonDetails Person=@person Disabled=@loading />
+    <PersonDetails Person=@person Disabled=@resource.Loading />
     <div class="mt-3 space-between">
         <div>
-            <button class="btn btn-primary" type="submit" disabled=@loading>Add</button>
+            <button class="btn btn-primary" type="submit" disabled=@resource.Loading>Add</button>
         </div>
         <div>
-            <a class="btn" href="/" disabled=@loading>Cancel</a>
+            <a class="btn" href="/" disabled=@resource.Loading>Cancel</a>
         </div>
     </div>
 </form>
 
 @code {
     PersonAddEditRequest person = new();
-    List<string> errors = new();
-    bool loading = false;
+    LoadableResource resource = new();
 
     private async Task AddPerson()
     {
-        loading = true;
-        try
+        await resource.TryInvoke(async () =>
         {
-            errors.Clear();
-            var response = await Http.PostAsJsonAsync<PersonAddEditRequest>("/api/people", person);
-            var content = await response.Content.ReadFromJsonAsync<PersonAddEditResponse>();
-            if (content == null)
+            var response = await PeopleApiClient.PostPerson(person);
+            if (response.Content == null)
             {
-                errors.Add("An error occurred.");
+                resource.Errors.Add("An error occurred.");
                 return;
             }
 
-            if (content.Error)
+            if (response.Content.Error)
             {
-                errors.AddRange(content.Errors.Errors.Select(e => e.Message));
+                resource.Errors.AddRange(response.Content.Errors.Errors.Select(e => e.Message));
                 return;
             }
 
-            response.EnsureSuccessStatusCode();
-        }
-        finally
-        {
-            loading = false;
-        }
-        Navigation.NavigateTo("/");
+            response.HttpResponseMessage.EnsureSuccessStatusCode();
+
+            Navigation.NavigateTo("/");
+        });
     }
 }

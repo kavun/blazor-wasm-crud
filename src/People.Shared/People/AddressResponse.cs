@@ -1,4 +1,4 @@
-﻿namespace PeopleBlazorWasm.Shared.People;
+namespace People.Shared.People;
 
 public record AddressResponse(
     string Street,

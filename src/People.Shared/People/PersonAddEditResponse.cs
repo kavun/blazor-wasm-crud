@@ -1,7 +1,6 @@
-using People.Shared;
 using System.Text.Json.Serialization;
 
-namespace PeopleBlazorWasm.Shared.People;
+namespace People.Shared.People;
 
 public class PersonAddEditResponse
 {

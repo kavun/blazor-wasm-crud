@@ -1,4 +1,4 @@
-﻿using PeopleBlazorWasm.Shared.People;
+﻿using People.Shared.People;
 
 namespace People.Application;
 

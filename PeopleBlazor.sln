@@ -17,11 +17,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9CA06197-4A6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{98EAD49B-619F-4364-942D-7342FD4B5B39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "People.Application.UnitTests", "tests\People.Application.UnitTests\People.Application.UnitTests.csproj", "{D60FF85B-FB20-4998-81FA-EBC51A797E53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "People.Application.UnitTests", "tests\People.Application.UnitTests\People.Application.UnitTests.csproj", "{D60FF85B-FB20-4998-81FA-EBC51A797E53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "People.BlazorWasmServer.IntegrationTests", "tests\People.BlazorWasmServer.IntegrationTests\People.BlazorWasmServer.IntegrationTests.csproj", "{BF9D7142-5D0F-4935-8669-8F8ED1BBDA3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "People.BlazorWasmServer.IntegrationTests", "tests\People.BlazorWasmServer.IntegrationTests\People.BlazorWasmServer.IntegrationTests.csproj", "{BF9D7142-5D0F-4935-8669-8F8ED1BBDA3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "People.BlazorWasmClient.UnitTests", "tests\People.BlazorWasmClient.UnitTests\People.BlazorWasmClient.UnitTests.csproj", "{527C4F3A-7DB8-4D5C-AC72-75825ED41B03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "People.BlazorWasmClient.UnitTests", "tests\People.BlazorWasmClient.UnitTests\People.BlazorWasmClient.UnitTests.csproj", "{527C4F3A-7DB8-4D5C-AC72-75825ED41B03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

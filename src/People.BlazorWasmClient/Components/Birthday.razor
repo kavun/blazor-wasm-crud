@@ -1,0 +1,8 @@
+@inject IClientClock Clock
+
+<span>@BirthDateTime.ToShortDateString() (@Math.Floor(Clock.UtcNow.Subtract(BirthDateTime).Days / 365m) years old)</span>
+
+@code {
+    [Parameter]
+    public DateTime BirthDateTime { get; set; }
+}

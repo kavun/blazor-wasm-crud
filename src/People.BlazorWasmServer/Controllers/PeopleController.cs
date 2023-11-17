@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using People.Application;
 using People.Shared.People;
-using PeopleBlazorWasm.Shared.People;
 
 namespace PeopleBlazorWasm.Server.Controllers;
 

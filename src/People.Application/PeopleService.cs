@@ -1,6 +1,5 @@
 using OneOf.Monads;
 using People.Shared.People;
-using PeopleBlazorWasm.Shared.People;
 
 namespace People.Application;
 

@@ -1,111 +1,93 @@
 @page "/edit/{Id:guid}"
 
+@using People.BlazorWasmClient.Services;
 @using People.Shared.People;
-@using PeopleBlazorWasm.Shared.People;
 
-@inject HttpClient Http
 @inject NavigationManager Navigation
+@inject PeopleApiClient PeopleApiClient
 
 <PageTitle>Edit @TitleName</PageTitle>
 
 <h1>Edit @TitleName</h1>
 
-<People.BlazorWasmClient.Components.Errors ErrorList=@errors />
+<Errors ErrorList=@resource.Errors />
 <form @onsubmit="EditPerson">
-    <People.BlazorWasmClient.Components.PersonDetails Person=@person Disabled=@loading />
+    <PersonDetails Person=@person Disabled=@resource.Loading />
     <div class="mt-3 space-between">
         <div>
-            <button class="btn btn-primary" type="submit" disabled=@loading>Save</button>
+            <button class="btn btn-primary" type="submit" disabled=@resource.Loading>Save</button>
         </div>
         <div>
-            <a class="btn" href="/" disabled=@loading>Cancel</a>
-            <button class="btn btn-danger" type="button" disabled=@loading @onclick=DeletePerson>Delete</button>
+            <a class="btn" href="/" disabled=@resource.Loading>Cancel</a>
+            <button class="btn btn-danger" type="button" disabled=@resource.Loading @onclick=DeletePerson>Delete</button>
         </div>
     </div>
 </form>
 
 @code {
     PersonAddEditRequest person = new();
-    List<string> errors = new();
-    bool loading = true;
     string TitleName => person?.Name ?? "Person";
+    LoadableResource resource = new();
 
     [Parameter]
     public Guid Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        loading = true;
-        try
+        await resource.TryInvoke(async () =>
         {
-            errors.Clear();
-            var response = await Http.GetFromJsonAsync<PersonAddEditResponse>($"api/people/{Id}");
-            if (response is null || response.Person is null)
+            var response = await PeopleApiClient.GetPerson(Id);
+
+            if (response is null || response.Content is null || response.Content.Person is null)
             {
-                errors.Add("An error occurred.");
+                resource.Errors.Add("An error occurred.");
                 return;
             }
 
-            person = new PersonAddEditRequest()
-            {
-                Name = response.Person.Name,
-                Street = response.Person.Address.Street,
-                City = response.Person.Address.City,
-                State = response.Person.Address.State,
-                Zip = response.Person.Address.Zip,
-                Phone = response.Person.Phone,
-                Birth = new DateOnly(response.Person.Birth.Year, response.Person.Birth.Month, response.Person.Birth.Day)
-            };
-        }
-        finally
-        {
-            loading = false;
-        }
+            response.HttpResponseMessage.EnsureSuccessStatusCode();
+
+            person = response.Content.ToRequest();
+        });
     }
 
     private async Task EditPerson()
     {
-        loading = true;
-        try
+        await resource.TryInvoke(async () =>
         {
-            errors.Clear();
-            var response = await Http.PutAsJsonAsync<PersonAddEditRequest>($"/api/people/{Id}", person);
-            var content = await response.Content.ReadFromJsonAsync<PersonAddEditResponse>();
-            if (content == null)
+            var response = await PeopleApiClient.PutPerson(Id, person);
+            if (response is null || response.Content is null)
             {
-                errors.Add("An error occurred.");
+                resource.Errors.Add("An error occurred.");
                 return;
             }
 
-            if (content.Error)
+            if (response.Content.Error)
             {
-                errors.AddRange(content.Errors.Errors.Select(e => e.Message));
+                resource.Errors.AddRange(response.Content.Errors.Errors.Select(e => e.Message));
                 return;
             }
 
-            response.EnsureSuccessStatusCode();
+            response.HttpResponseMessage.EnsureSuccessStatusCode();
+
             Navigation.NavigateTo("/");
-        }
-        finally
-        {
-            loading = false;
-        }
+        });
     }
 
 
     async Task DeletePerson()
     {
-        loading = true;
-        try
+        await resource.TryInvoke(async () =>
         {
-            errors.Clear();
-            var response = await Http.DeleteAsync($"/api/people/{Id}");
+            var response = await PeopleApiClient.DeletePerson(Id);
+            if (response is null)
+            {
+                resource.Errors.Add("An error occurred.");
+                return;
+            }
+
             response.EnsureSuccessStatusCode();
+
             Navigation.NavigateTo("/");
-        }
-        finally
-        {
-            loading = false;
-        }
+        });
     }
 }
