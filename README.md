@@ -1,6 +1,7 @@
 # blazor-wasm-crud
 
 [![Dotnet Build Status](https://github.com/kavun/blazor-wasm-crud/actions/workflows/dotnet.yml/badge.svg)](https://github.com/kavun/blazor-wasm-crud/actions/workflows/dotnet.yml)
+[![Fly Deploy](https://github.com/kavun/blazor-wasm-crud/actions/workflows/fly.yml/badge.svg)](https://github.com/kavun/blazor-wasm-crud/actions/workflows/fly.yml)
 
 This is a sample Blazor application that allows CRUD of People. This showcases the following stack:
 
@@ -13,6 +14,9 @@ This is a sample Blazor application that allows CRUD of People. This showcases t
 - [bUnit](https://bunit.dev/)
 - [WebApplicationFactory integration tests](https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0) with [SQLite in-memory database](https://sqlite.org/inmemorydb.html)
 - [.\local.ps1](https://github.com/kavun/ps-cli)
+
+See the running application: blazor-wasm-crud dot fly dot dev
+![Running application on fly.io](docs/fly.png)
 
 ## Develop
 
