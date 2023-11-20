@@ -7,7 +7,7 @@ app = "blazor-wasm-crud"
 primary_region = "iad"
 
 [build]
-  dockerfile = ".\\src\\People.BlazorWasmServer\\Dockerfile"
+  dockerfile = "./src/People.BlazorWasmServer/Dockerfile"
 
 [http_service]
   internal_port = 80
