@@ -46,7 +46,7 @@
 
             response.HttpResponseMessage.EnsureSuccessStatusCode();
 
-            person = response.Content.ToRequest();
+            person = response.Content.ToAddEditRequest();
         });
     }
 

@@ -11,11 +11,12 @@ COMMANDS
     migration <name> ... create a new db migration
     run ................ run the server
     test ............... run tests
+    compose ............ run docker-compose
     help, -? ........... show this help message
 #>
 param(
   [Parameter(Position=0)]
-  [ValidateSet("migrate", "run", "test", "help", "migration")]
+  [ValidateSet("migrate", "run", "test", "compose", "help", "migration")]
   [string]$Command,
 
   [Parameter(Position=1, ValueFromRemainingArguments=$true)]
@@ -53,10 +54,15 @@ function Invoke-Migration([string]$MigrationName) {
         --startup-project $PSScriptRoot\src\People.BlazorWasmServer
 }
 
+function Invoke-Compose([string]$Rest) {
+    Invoke-Expression "docker compose --file $PSScriptRoot\docker-compose.yaml --project-directory $PSScriptRoot up -d --build $Rest"
+}
+
 switch ($Command) {
     "migrate" { Invoke-Migrate }
     "run" { Invoke-Run }
     "test" { Invoke-Test }
+    "compose" { Invoke-Expression "Invoke-Compose $Rest" }
     "help" { Invoke-Help }
     "migration" { Invoke-Expression "Invoke-Migration $Rest" }
 }

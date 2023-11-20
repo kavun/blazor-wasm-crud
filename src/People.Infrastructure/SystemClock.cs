@@ -1,4 +1,4 @@
-using People.Application;
+using People.Application.Abstract;
 
 namespace People.Infrastructure;
 public class SystemClock : IClock

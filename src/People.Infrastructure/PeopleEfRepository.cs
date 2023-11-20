@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using People.Application;
+using People.Application.Abstract;
 
 namespace People.Infrastructure;
 

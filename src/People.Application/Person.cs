@@ -1,5 +1,7 @@
 using OneOf.Monads;
+using People.Application.Abstract;
 using People.Shared;
+using People.Shared.Extensions;
 using People.Shared.People;
 
 namespace People.Application;
@@ -46,39 +48,39 @@ public class Person
         var fieldErrors = new FieldErrors();
         if (string.IsNullOrWhiteSpace(request.Name))
         {
-            fieldErrors.Add("Name is required");
+            fieldErrors.Add("Name is required.");
         }
 
         if (string.IsNullOrWhiteSpace(request.Street))
         {
-            fieldErrors.Add("Street is required");
+            fieldErrors.Add("Street is required.");
         }
 
         if (string.IsNullOrWhiteSpace(request.City))
         {
-            fieldErrors.Add("City is required");
+            fieldErrors.Add("City is required.");
         }
 
         if (string.IsNullOrWhiteSpace(request.State))
         {
-            fieldErrors.Add("State is required");
+            fieldErrors.Add("State is required.");
         }
 
         if (string.IsNullOrWhiteSpace(request.Zip))
         {
-            fieldErrors.Add("Zip is required");
+            fieldErrors.Add("Zip is required.");
         }
 
         if (string.IsNullOrWhiteSpace(request.Phone))
         {
-            fieldErrors.Add("Phone is required");
+            fieldErrors.Add("Phone is required.");
         }
 
         if (request.Birth is null)
         {
-            fieldErrors.Add("Birth is required");
+            fieldErrors.Add("Birth is required.");
         }
-        else if (request.Birth.Value.ToDateTime(new TimeOnly()) > clock.UtcNow)
+        else if (request.Birth.Value > clock.UtcNow.ToDateOnly())
         {
             fieldErrors.Add("Humans cannot be born in the future.");
         }

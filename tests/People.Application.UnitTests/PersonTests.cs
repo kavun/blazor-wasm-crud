@@ -1,3 +1,4 @@
+using People.Application.Abstract;
 using People.Shared.People;
 
 namespace People.Application.UnitTests;
@@ -14,16 +15,29 @@ public class PersonTests
     public void Add_MissingName_ReturnsFieldErrors()
     {
         // arrange
-        var request = new PersonAddEditRequest();
+        var request = TestHelpers.GetPersonAddEditRequest(name: null);
 
         // act
         var result = Person.Add(_clock, request);
 
         // assert
         Assert.True(result.IsError());
-        Assert.Contains(result.ErrorValue().Errors, e => e.Message == "Name is required");
+        Assert.Contains(result.ErrorValue().Errors, e => e.Message == "Name is required.");
+    }
 
-        // TODO: assert other FieldErrors
+    [Fact]
+    public void Add_DateInFuture_ReturnsFieldErrors()
+    {
+        // arrange
+        var testClock = new TestClock(utcNow: new DateTime(2023, 1, 1));
+        var request = TestHelpers.GetPersonAddEditRequest(birth: new DateOnly(2023, 2, 1));
+
+        // act
+        var result = Person.Add(_clock, request);
+
+        // assert
+        Assert.True(result.IsError());
+        Assert.Contains(result.ErrorValue().Errors, e => e.Message == "Humans cannot be born in the future.");
     }
 
     [Fact]
@@ -38,8 +52,6 @@ public class PersonTests
 
         // assert
         Assert.True(result.IsError());
-        Assert.Contains(result.ErrorValue().Errors, e => e.Message == "Name is required");
-
-        // TODO: assert other FieldErrors
+        Assert.Contains(result.ErrorValue().Errors, e => e.Message == "Name is required.");
     }
 }

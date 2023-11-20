@@ -1,3 +1,4 @@
+using People.Application.Abstract;
 using People.Shared.People;
 
 namespace People.Application.UnitTests;
@@ -21,5 +22,21 @@ public static class TestHelpers
             });
 
         return result.SuccessValue();
+    }
+
+    public static PersonAddEditRequest GetPersonAddEditRequest(
+        DateOnly? birth = null,
+        string? name = "test")
+    {
+        return new PersonAddEditRequest()
+        {
+            Birth = birth ?? new DateOnly(1990, 1, 1),
+            City = "test",
+            Name = name,
+            Phone = "test",
+            State = "test",
+            Street = "test",
+            Zip = "test"
+        };
     }
 }

@@ -1,3 +1,5 @@
+using People.Application.Abstract;
+
 namespace People.Application.UnitTests;
 
 public partial class PeopleServiceTests

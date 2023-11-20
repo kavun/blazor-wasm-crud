@@ -1,0 +1,9 @@
+@using People.Shared.People
+@if (AddressResponse is not null)
+{
+    <span>@AddressResponse.Street, @AddressResponse.City, @AddressResponse.State @AddressResponse.Zip</span>
+}
+@code {
+    [Parameter]
+    public AddressResponse? AddressResponse { get; set; }
+}
