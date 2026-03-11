@@ -3,16 +3,16 @@
 [![Dotnet Build Status](https://github.com/kavun/blazor-wasm-crud/actions/workflows/dotnet.yml/badge.svg)](https://github.com/kavun/blazor-wasm-crud/actions/workflows/dotnet.yml)
 [![Fly Deploy](https://github.com/kavun/blazor-wasm-crud/actions/workflows/fly.yml/badge.svg)](https://github.com/kavun/blazor-wasm-crud/actions/workflows/fly.yml)
 
-This is a sample Blazor application that allows CRUD of People. This showcases the following stack:
+This is a sample Blazor application that allows CRUD of People. This showcases the following stack on .NET 10:
 
-- [Blazor WebAssembly](https://learn.microsoft.com/en-us/aspnet/core/blazor/hosting-models?view=aspnetcore-7.0#blazor-webassembly)
-- [ASP.NET Core Web API](https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-7.0)
+- [Blazor WebAssembly](https://learn.microsoft.com/en-us/aspnet/core/blazor/hosting-models?view=aspnetcore-10.0#blazor-webassembly)
+- [ASP.NET Core Web API](https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-10.0)
 - [mcintyre321/OneOf](https://github.com/mcintyre321/OneOf) and [svan-jansson/OneOf.Monads](https://github.com/svan-jansson/OneOf.Monads)
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
 - [SQLite](https://www.sqlite.org/index.html)
 - [xUnit](https://xunit.net/)
 - [bUnit](https://bunit.dev/)
-- [WebApplicationFactory integration tests](https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0) with [SQLite in-memory database](https://sqlite.org/inmemorydb.html)
+- [WebApplicationFactory integration tests](https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-10.0) with [SQLite in-memory database](https://sqlite.org/inmemorydb.html)
 - [.\local.ps1](https://github.com/kavun/ps-cli)
 
 See the running application: blazor-wasm-crud dot fly dot dev
@@ -21,11 +21,15 @@ See the running application: blazor-wasm-crud dot fly dot dev
 ## Develop
 
 ### Prerequisites
-- Install dotnet 7 SDK: https://dotnet.microsoft.com/en-us/download/dotnet/7.0
-- Install `dotnet ef` (>= v7.0.13)
+- Install dotnet 10 SDK: https://dotnet.microsoft.com/en-us/download/dotnet/10.0
+- Install `dotnet ef` (>= v10.0.4)
 ```powershell
-dotnet tool install --global dotnet-ef --version 7.0.13
+dotnet tool install --global dotnet-ef --version 10.0.4
 ```
+
+### Migration notes
+- The solution now targets `net10.0`, and the ASP.NET Core / EF Core package references are updated to the 10.0.x line.
+- CI and container builds now use .NET 10 so local development, GitHub Actions, and Fly.io deployments stay aligned.
 
 ### Run
 
@@ -74,9 +78,9 @@ One hiccup I ran into is that it's not trivial to pass arguments to event handle
 <button @onclick="@((e) => DeletePerson(person.Id))">Delete</button>
 ```
 
-This works, but comes with the [warning](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-7.0#lambda-expressions):
+This works, but comes with the [warning](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-10.0#lambda-expressions):
 
-> Creating a large number of event delegates in a loop may cause poor rendering performance. For more information, see [ASP.NET Core Blazor performance best practices](https://learn.microsoft.com/en-us/aspnet/core/blazor/performance?view=aspnetcore-7.0#avoid-recreating-delegates-for-many-repeated-elements-or-components).
+> Creating a large number of event delegates in a loop may cause poor rendering performance. For more information, see [ASP.NET Core Blazor performance best practices](https://learn.microsoft.com/en-us/aspnet/core/blazor/performance?view=aspnetcore-10.0#avoid-recreating-delegates-for-many-repeated-elements-or-components).
 
 #### Error Handling
 
